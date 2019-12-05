@@ -1,0 +1,82 @@
+server:
+  port: 8082
+
+# DataSource Config
+spring:
+  application:
+    name: activity
+  datasource:
+    dynamic:
+      primary: db1-master
+      p6spy: true
+      druid:
+        initial-size: 5
+        min-idle: 5
+        max-active: 20
+        validation-query: SELECT 1 FROM DUAL
+        test-while-idle: true
+        validation-query-timeout: 2
+        filters: stat,wall,slf4j
+      datasource:
+        # db1-主库数据源
+        db1-master:
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://localhost:3306/activity?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=UTC
+          username: root
+          password: 123456
+        # db1-从数据源
+        db1-slave:
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://10.29.60.170:3306/isupport_test?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=UTC
+          username: iadmin
+          password: itask#ADMIN89
+        # db2-从数据源
+        db2-slave:
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://localhost:3306/user?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=UTC
+          username: root
+          password: 123456
+  autoconfigure: 
+    exclude: com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    mode: HTML5
+    encoding: UTF-8
+    cache: false
+    servlet:
+      content-type: text/html
+
+mybatis-plus:
+  mapper-locations: classpath:/mapper/*.xml
+  type-aliases-package: com.hcf.activity.entity
+  configuration:
+    # 驼峰下划线转换
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+    call-setters-on-nulls: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl #打印SQL，开发用
+  global-config:
+    # 刷新mapper 调试神器
+    refresh: true
+    banner: false
+    #数据库大写下划线转换
+    #capital-mode: true
+    #序列接口实现类配置
+    #key-generator: com.baomidou.springboot.xxx
+    # 数据库相关配置
+    db-config:
+      db-type: mysql
+      # 主键类型  AUTO:"数据库ID自增", INPUT:"用户输入ID",ID_WORKER:"全局唯一ID (数字类型唯一ID)", UUID:"全局唯一ID UUID";
+      id-type: UUID
+      # 字段策略 IGNORED:"忽略判断",NOT_NULL:"非 NULL 判断"),NOT_EMPTY:"非空判断"
+      field-strategy: not_empty
+      capital-mode: true
+      #逻辑删除配置
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+      
+#配置日志级别
+logging:
+  level:
+    com.example.plus.mapper: debug
