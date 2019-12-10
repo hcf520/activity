@@ -1,6 +1,6 @@
 server:
   port: 8082
-
+  context-path: /activity
 # DataSource Config
 spring:
   application:
