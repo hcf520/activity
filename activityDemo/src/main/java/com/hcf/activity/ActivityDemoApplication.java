@@ -3,6 +3,7 @@ package com.hcf.activity;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
+import org.activiti.spring.boot.SecurityAutoConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
@@ -12,7 +13,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure;
 
 @EnableTransactionManagement
-@SpringBootApplication(exclude = DruidDataSourceAutoConfigure.class)
+@SpringBootApplication(exclude = {DruidDataSourceAutoConfigure.class,SecurityAutoConfiguration.class})
 //@MapperScan(basePackages = "com.hcf.activity.mapper") //扫描自定义的Mapper接口，并注入对应的SqlSession实例 (mybatis-plus配置里已有)
 public class ActivityDemoApplication {
 
